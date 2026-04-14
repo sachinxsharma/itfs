@@ -1,0 +1,489 @@
+sachin.txt
+
+---
+
+## Practical 1: AngularJS Multiple Filters
+
+index.html
+<!DOCTYPE html>
+<html>
+<head>
+ <title>AngularJS Filters Example</title>
+ <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script> 
+ <link rel="stylesheet" href="style.css">
+</head>
+
+<body ng-app="filterApp" ng-controller="filterController">
+ <div class="container">
+ <h1>AngularJS Filters Example</h1>
+
+ <h2>Search and Sort:</h2>
+ <input type="text" ng-model="searchText" placeholder="Search for a fruit...">
+ <select ng-model="sortColumn">
+ <option value="">View options</option>
+ <option value="name">Name</option>
+ <option value="price">Price</option>
+ </select>
+
+ <ul>
+ <li ng-repeat="fruit in fruits | filter:searchText | orderBy:sortColumn">
+ {{ fruit.name | uppercase }} - {{ fruit.price | currency }} 
+ </li>
+ </ul>
+
+ <h2>Date Filter:</h2>
+ <p>{{ today | date:'fullDate' }}</p>
+
+ <h2>JSON Filter:</h2>
+ <pre>{{ product | json }}</pre>
+
+ <h2>LimitTo Filter:</h2>
+ <input type="number" ng-model="limitValue">
+ <p>{{ message | limitTo:limitValue }}</p>
+
+ <h2>Lowercase Filter:</h2>
+ <input type="text" ng-model="lowercaseInput">
+ <p>{{ lowercaseInput | lowercase }}</p>
+
+ <h2>Uppercase Filter:</h2>
+ <input type="text" ng-model="uppercaseInput">
+ <p>{{ uppercaseInput | uppercase }}</p>
+
+ <h2>Positive Number Filter: {{ product.price}}</h2>
+ <p>{{ product.price | number:3 }}</p>
+
+ <h2>Negative Number Filter: {{ product.price}}</h2>
+ <p>{{ product.price/ 10 }}</p>
+
+ </div>
+
+ <script>
+ var app = angular.module('filterApp', []); 
+
+ app.controller('filterController', function($scope) { 
+ $scope.product = { 
+ name: 'Laptop', 
+ price: 1234.56
+ }; 
+
+ $scope.today = new Date(); 
+
+ $scope.fruits = [ 
+ { name: 'Apple', price: 1.2 }, 
+ { name: 'Banana', price: 0.5 }, 
+ { name: 'Cherry', price: 3.0 }, 
+ { name: 'Date', price: 2.5 }, 
+ { name: 'Elderberry', price: 4.0 } 
+ ]; 
+
+ $scope.message = "Hello, AngularJS Filters!"; 
+
+ $scope.limitValue = 10; 
+ $scope.lowercaseInput = ''; 
+ $scope.uppercaseInput = ''; 
+ }); 
+ </script>
+
+</body>
+</html>
+
+style.css
+body { 
+ font-family: Arial, sans-serif; 
+ background: url('/images/Background.jpg') no-repeat center center fixed; 
+ background-size: cover; 
+ display: flex; 
+ justify-content: center; 
+ align-items: center; 
+ height: 100vh; 
+ margin: 0; 
+ overflow: hidden;
+} 
+
+.container { 
+ background-color: rgba(255, 255, 255, 0.9); 
+ padding: 20px; 
+ border-radius: 10px; 
+ box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+ width: 90%; 
+ max-width: 600px; 
+ max-height: 90vh; 
+ overflow-y: auto; 
+} 
+
+h1 { 
+ color: #4CAF50; 
+} 
+
+h2 { 
+ color: #333; 
+} 
+
+input, select { 
+ margin-bottom: 10px; 
+ padding: 10px; 
+ width: 100%; 
+ border-radius: 4px; 
+ border: 1px solid #ccc; 
+} 
+
+ul { 
+ list-style-type: none; 
+ padding: 0; 
+} 
+
+li { 
+ margin: 5px 0; 
+ background-color: #f9f9f9; 
+ padding: 10px; 
+ border: 1px solid #ccc; 
+ border-radius: 4px; 
+}
+
+---
+
+## Practical 2: AngularJS Routing / SPA
+
+Practical_2_Ajs_Routing.html
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+ <title>AngularJs Routing</title>
+ <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+ <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.min.js"></script>
+</head>
+
+<body>
+<h2>AngularJS Routing / Single Page Application</h2>
+
+<div ng-app="mainApp">
+ <p><a href="#addStudent">Add Student</a></p>
+ <p><a href="#viewStudents">View Students</a></p>
+ <div ng-view></div>
+
+ <script type="text/ng-template" id="addStudent.html">
+ <h2>Add Student</h2>
+ <p>{{message}}</p>
+ </script>
+
+ <script type="text/ng-template" id="viewStudents.html">
+ <h2>View Students</h2>
+ <p>{{message}}</p>
+ </script>
+</div>
+
+<script>
+var mainApp = angular.module("mainApp", ['ngRoute']);
+
+mainApp.config(function($routeProvider){
+ $routeProvider
+ .when('/addStudent',{
+ templateUrl:'addStudent.html',
+ controller:'AddStudentController'
+ })
+ .when('/viewStudents',{
+ templateUrl:'viewStudents.html',
+ controller:'ViewStudentsController'
+ })
+ .otherwise({redirectTo:'/addStudent'});
+});
+
+mainApp.controller('AddStudentController',function($scope){
+ $scope.message="Add Student Page";
+});
+
+mainApp.controller('ViewStudentsController',function($scope){
+ $scope.message="View Students Page";
+});
+</script>
+
+</body>
+</html>
+```
+
+---
+
+## Practical 3: AngularJS Validations
+
+Angular_Validation.html
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+ <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+
+<body ng-app="myApp" ng-controller="FormController">
+
+<form name="form1" novalidate ng-submit="submitForm(form1.$valid)">
+ First Name:
+ <input name="fname" ng-model="formData.fname" required ng-pattern="/^[a-zA-Z]+$/">
+ <span ng-show="form1.fname.$invalid">Invalid</span>
+
+ Email:
+ <input name="email" ng-model="formData.email" required type="email">
+
+ <input type="submit">
+</form>
+
+<script>
+var app = angular.module('myApp', []);
+
+app.controller('FormController', function($scope){
+ $scope.submitForm=function(valid){
+ if(valid){ alert("Submitted"); }
+ else{ alert("Error"); }
+ }
+});
+</script>
+
+</body>
+</html>
+```
+
+---
+
+## Practical 4: Custom Validation
+
+Custom_Validation.html
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+ <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+
+<body ng-app="myApp" ng-controller="myCtrl">
+
+<form name="myForm" ng-submit="submitForm()" novalidate>
+
+<input type="text" name="fullname" ng-model="formData.fullname" my-directive1 required>
+<span ng-show="myForm.fullname.$invalid">Invalid</span>
+
+<input type="submit">
+</form>
+
+<script>
+var app = angular.module('myApp', []);
+
+app.directive('myDirective1', function(){
+ return {
+ require:'ngModel',
+ link:function(scope,element,attr,mCtrl){
+ function validate(value){
+ if(value.includes('a')){
+ mCtrl.$setValidity('charE',true);
+ }else{
+ mCtrl.$setValidity('charE',false);
+ }
+ return value;
+ }
+ mCtrl.$parsers.push(validate);
+ }
+ };
+});
+
+app.controller('myCtrl', function($scope){
+ $scope.submitForm=function(){
+ if($scope.myForm.$valid){ alert("Success"); }
+ };
+});
+</script>
+
+</body>
+</html>
+```
+
+---
+
+## Practical 5: Parent Child React
+
+App.js
+
+```js
+import React from 'react';
+import Child from './Child';
+
+class App extends React.Component {
+ state={name:""}
+
+ handleCallback=(data)=>{
+ this.setState({name:data})
+ }
+
+ render(){
+ return(
+ <>
+ <Child parentCallback={this.handleCallback}/>
+ <p>{this.state.name}</p>
+ </>
+ )
+ }
+}
+
+export default App;
+```
+
+Child.js
+
+```js
+import React from 'react';
+
+class Child extends React.Component{
+ onTrigger=(e)=>{
+ this.props.parentCallback(e.target.myname.value);
+ e.preventDefault();
+ }
+
+ render(){
+ return(
+ <form onSubmit={this.onTrigger}>
+ <input name="myname"/>
+ <input type="submit"/>
+ </form>
+ )
+ }
+}
+
+export default Child;
+```
+
+---
+
+## Practical 6: Functional Component
+
+App.js
+
+```js
+function Employee(props){
+ return(
+ <>
+ <p>{props.name}</p>
+ <p>{props.salary}</p>
+ </>
+ )
+}
+
+export default Employee;
+```
+
+index.js
+
+```js
+import ReactDOM from 'react-dom/client';
+import Employee from './App';
+
+const root=ReactDOM.createRoot(document.getElementById('root'));
+
+root.render(<Employee name="Test" salary="10000"/>);
+```
+
+---
+
+## Practical 7: Styling React
+
+App.js
+
+```js
+import ContactCard from './ContactCard';
+
+function App(){
+ return(
+ <>
+ <ContactCard contact={{name:"Virat",phone:"123"}}/>
+ </>
+ )
+}
+
+export default App;
+```
+
+ContactCard.js
+
+```js
+function ContactCard(props){
+ return(
+ <>
+ <h3>{props.contact.name}</h3>
+ <p>{props.contact.phone}</p>
+ </>
+ )
+}
+
+export default ContactCard;
+```
+
+---
+
+## Practical 8: Routing React
+
+index.js
+
+```js
+import {BrowserRouter,Routes,Route} from "react-router-dom";
+import Home from "./Home";
+
+function App(){
+ return(
+ <BrowserRouter>
+ <Routes>
+ <Route path="/" element={<Home/>}/>
+ </Routes>
+ </BrowserRouter>
+ )
+}
+
+export default App;
+```
+
+---
+
+## Practical 9: MongoDB CRUD
+click on mongodbsh  shell 
+
+write ---> mongod
+  then 
+
+  1. show dbs
+  2. use mydb
+  3. db.users.insertMany([ 
+{ id: 1, name: 'Ryan', gender: 'M', country:'India' }, 
+{ id: 2, name: 'Joanna', gender: 'F', country:'India'},
+{ id: 3, name: 'saad', gender: 'M', country:'US' }, 
+{ id: 4, name: 'kiran', gender: 'F', country:'India'}, 
+{ id: 5, name: 'sherin', gender: 'F', country:'US' }, 
+{ id: 6, name: 'mugli', gender: 'F', country:'India'}, 
+{ id: 7, name: 'riya', gender: 'F', country:'India' }, 
+{ id: 8, name: 'sunil', gender: 'M', country:'India'}, 
+{ id: 9, name: 'neha', gender: 'F', country:'India' }, 
+{ id: 10, name: 'sunita', gender: 'F', country:'US'}, 
+]); 
+  4. db.users.find({"gender":"F", $or:[{"country":"India"}]}).count(); 
+  5. db.users.find();
+  
+
+
+
+  
+## Practical 10: MongoDB CRUD
+1. use mydb
+2. 
+student1 = {Name: "stud1", Gender:"M", Class:"C1", Age: 28, Subject:"AWT"} 
+student2 = {Name: "stud2", Gender:"F", Class:"C3", Age: 30, Subject:"DV"} 
+student3 = {Name: "stud3", Gender:"F", Class:"C2", Age: 27, Subject:"AWT"} 
+student4 = {Name: "stud4", Gender:"F", Class:"C1", Age: 24, Subject:"DV"} 
+student5 = {Name: "stud5", Gender:"M", Class:"C2", Age: 21, Subject:"AWT"} 
+student6 = {Name: "stud6", Gender:"F", Class:"C3", Age: 30, Subject:"NLP"} 
+student7 = {Name: "stud7", Gender:"M", Class:"C1", Age: 25, Subject:"AWT"} 
+student8 = {Name: "stud8", Gender:"F", Class:"C2", Age: 22, Subject:"NLP"} 
+student9 = {Name: "stud9", Gender:"F", Class:"C3", Age: 26, Subject:"AWT"} 
+student10 = {Name: "stud10", Gender:"M", Class:"C1", Age: 23, Subject:"NLP"}
+3. db.teachers.insertMany([student1, student2, student3, student4, student5, student6, 
+student7, student8, student9, student10]); 
+4. db.teachers.find().sort({"Age":1});
+5. db.teachers.find();
+6. 
